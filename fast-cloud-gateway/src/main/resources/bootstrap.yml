@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: fast-cloud-gateway
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      metrics:
+        enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: fast-cloud-system
+          uri: lb://fast-cloud-system
+          order: 1
+          predicates:
+            - Path=/sys/**
+          filters:
+            - StripPrefix=1
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+    nacos:
+      discovery:
+        #        server-addr: 172.23.80.1:8848
+        server-addr: localhost:8848
+        namespace: fast_cloud100
+      config:
+        #        server-addr: 172.23.80.1:8848
+        server-addr: localhost:8848
+        namespace: fast_cloud100
+        file-extension: yaml
+        extension-configs:
+          - data-id: datasource.yaml
+            refresh: true
+
+springdoc:
+  swagger-ui:
+    path: doc.htm
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE

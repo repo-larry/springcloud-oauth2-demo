@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  fast-cloud-gateway:
+    image: makunet:1.0
+    container_name: fast-cloud-gateway
+    ports:
+      - 8080:8080
+    env_file:
+      - app.env
+    volumes:
+      - /opt/service/fast/fast-cloud-gateway.jar:/app/app.jar
+  fast-cloud-system:
+    image: makunet:1.0
+    container_name: fast-cloud-system
+    ports:
+      - 8081:8081
+    env_file:
+      - app.env
+    volumes:
+      - /opt/service/fast/fast-cloud-system.jar:/app/app.jar
